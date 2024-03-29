@@ -1,0 +1,7 @@
+package*.json
+next.config.mjs
+README.md
+tsconfig.json
+.gitignore
+.env*
+.editorconfig

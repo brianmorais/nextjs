@@ -34,7 +34,9 @@ export default function Dashboard() {
               <Textarea
                 placeholder="Digite aqui sua tarefa"
                 value={input}
-                onChange={(event: ChangeEvent<HTMLTextAreaElement>) => setInput(event.target.value)}
+                onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>
+                  setInput(event.target.value)
+                }
               />
               <div className={styles.checkboxArea}>
                 <input
