@@ -22,9 +22,18 @@ interface HomeProps {
   };
 }
 
+interface TaskProps {
+  id: string;
+  created: Date;
+  public: boolean;
+  tarefa: string;
+  user: string;
+}
+
 export default function Dashboard({ user }: HomeProps) {
   const [input, setInput] = useState('');
   const [publicTask, setPublicTask] = useState(false);
+  const [tasks, setTasks] = useState<TaskProps[]>([]);
 
   function handleChangePublic(event: ChangeEvent<HTMLInputElement>) {
     setPublicTask(event.target.checked);
@@ -58,7 +67,18 @@ export default function Dashboard({ user }: HomeProps) {
       );
 
       onSnapshot(q, (snapshot) => {
-        console.log(snapshot);
+        let list = [] as TaskProps[];
+        snapshot.forEach((doc) => {
+          list.push({
+            id: doc.id,
+            created: doc.data().created,
+            tarefa: doc.data().tarefa,
+            user: doc.data().user,
+            public: doc.data().public,
+          });
+        });
+
+        setTasks(list);
       });
     }
 
@@ -99,20 +119,24 @@ export default function Dashboard({ user }: HomeProps) {
         </section>
         <section className={styles.taskContainer}>
           <h1>Minhas tarefas</h1>
-          <article className={styles.task}>
-            <div className={styles.tagContainer}>
-              <label className={styles.tag}>PUBLICO</label>
-              <button className={styles.shareButton}>
-                <FiShare2 size={22} color="#3183ff" />
-              </button>
-            </div>
-            <div className={styles.taskContent}>
-              <p>Minha primeira tarefa de exemplo</p>
-              <button className={styles.trashButton}>
-                <FaTrash size={24} color="#ea3140" />
-              </button>
-            </div>
-          </article>
+          {tasks.map((task) => (
+            <article key={task.id} className={styles.task}>
+              {task.public && (
+                <div className={styles.tagContainer}>
+                  <label className={styles.tag}>PUBLICO</label>
+                  <button className={styles.shareButton}>
+                    <FiShare2 size={22} color="#3183ff" />
+                  </button>
+                </div>
+              )}
+              <div className={styles.taskContent}>
+                <p>{task.tarefa}</p>
+                <button className={styles.trashButton}>
+                  <FaTrash size={24} color="#ea3140" />
+                </button>
+              </div>
+            </article>
+          ))}
         </section>
       </main>
     </div>
